@@ -1,6 +1,9 @@
 package main
 
-import "database/sql"
+import (
+	"database/sql"
+	"fmt"
+)
 
 type repository interface {
 	Create(code string) error
@@ -18,6 +21,8 @@ func newRepository(db *sql.DB) repository {
 }
 
 func (r repositoryImp) Create(code string) error {
+	fmt.Println(lastCode)
+	fmt.Println(code)
 	_, err := r.db.Exec(createCode, code)
 	if err != nil {
 		return err

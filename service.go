@@ -1,5 +1,10 @@
 package main
 
+import (
+	"fmt"
+	"sync"
+)
+
 type Service interface {
 	Create() (string, error)
 	GetLastCode() (int, error)
@@ -16,11 +21,20 @@ func NewService(repo repository) Service {
 }
 
 func (s serviceImp) Create() (string, error) {
-	c := Code{}
-	code := c.generate()
+	var wg sync.WaitGroup
+	var mutex sync.Mutex
+	wg.Add(1)
+	go func() {
+		mutex.Lock()
+		lastCode++
+		mutex.Unlock()
+		wg.Done()
+	}()
+	wg.Wait()
+	code := fmt.Sprintf("%010d", lastCode)
 	err := s.repository.Create(code)
 	if err != nil {
-		return "", err
+		panic(err)
 	}
 	return code, nil
 }

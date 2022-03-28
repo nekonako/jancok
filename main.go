@@ -1,14 +1,16 @@
 package main
 
 import (
+	"runtime"
+
 	"github.com/gofiber/fiber/v2"
 )
 
 var lastCode int
 
-var code Code
-
 func main() {
+
+	runtime.GOMAXPROCS(4)
 
 	db := newDb()
 	repo := newRepository(db)

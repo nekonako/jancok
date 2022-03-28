@@ -12,5 +12,8 @@ func newDb() *sql.DB {
 	if err != nil {
 		panic(err)
 	}
+	db.SetConnMaxIdleTime(10)
+	db.SetMaxIdleConns(10)
+	db.SetMaxOpenConns(-1)
 	return db
 }
